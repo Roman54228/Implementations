@@ -39,7 +39,10 @@ def anonymize_face_pixelate(image, blocks=15):
 			# extract the ROI using NumPy array slicing, compute the
 			# mean of the ROI, and then draw a rectangle with the
 			# mean RGB values over the ROI in the original image
+
 			roi = image[startY:endY, startX:endX]
+			#print(f"ROI {roi.shape}")
+			#print(type(cv2.mean(roi)[:3]))
 			(B, G, R) = [int(x) for x in cv2.mean(roi)[:3]]
 			cv2.rectangle(image, (startX, startY), (endX, endY),
 				(B, G, R), -1)
@@ -47,11 +50,11 @@ def anonymize_face_pixelate(image, blocks=15):
 	return image
 
 
-if __name__ == '__main__':
-	im = cv2.imread('pic.jpg')
+def forweb(im, face_cascade):
+	#im = cv2.imread('pic.jpg')
 	#im = cv2.cvtColor(im, cv2.COLOR_BGR2RGB)
 
-	face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades+'haarcascade_frontalface_default.xml')
+	
 	
 	gray = cv2.cvtColor(im, cv2.COLOR_RGB2GRAY)
 	faceRects = face_cascade.detectMultiScale(
@@ -66,9 +69,22 @@ if __name__ == '__main__':
 
 
 	#crop = anonymize_face_simple(im[fY:fY+ fH, fX:fX + fW])
-	crop = anonymize_face_pixelate(im[fY:fY+ fH, fX:fX + fW])
-	im[fY:fY+ fH, fX:fX + fW] = crop
-	cv2.imshow('im', im)
-	cv2.waitKey(0)
-	#if cv2.waitKey(1) & 0xFF == ord('q'):
+		crop = anonymize_face_pixelate(im[fY:fY+ fH, fX:fX + fW])
+		im[fY:fY+ fH, fX:fX + fW] = crop
+		cv2.imshow('im', im)
+	#cv2.waitKey(0)
+		if cv2.waitKey(1) & 0xFF == ord('q'):
+			break
+
+if __name__ == '__main__':
+	cam = cv2.VideoCapture(0)
+	face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades+'haarcascade_frontalface_default.xml')
+
+	while True:
+		ret, frame = cam.read()
+		if not ret:
+			raise Exception('Cannot take a shot')
+
+		forweb(frame, face_cascade)
+	
 		
