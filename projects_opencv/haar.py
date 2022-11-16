@@ -22,20 +22,19 @@ detectors = {}
 
 for (name, path) in detectorPaths.items():
 	#path = os.path.sep.join([args['cascades'], path])
-	print(path)
+	
 	detectors[name] = cv2.CascadeClassifier(cv2.data.haarcascades + path)
 
 print("[INFO] starting video processing ...")
 vs = VideoStream(src=0).start()
 time.sleep(2.0)
-print(detectors)
+
 while True:
 	frame = vs.read()
-	print(f"before {frame.shape}")
 	frame = imutils.resize(frame, width=500)
-	print(f"resized {frame.shape}")
+	
 	gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-	print(f"gray {gray.shape}")
+	
 	faceRects = detectors["face"].detectMultiScale(
 		gray, scaleFactor=1.05, minNeighbors=5, minSize=(30, 30),
 		flags=cv2.CASCADE_SCALE_IMAGE)
@@ -52,22 +51,22 @@ while True:
 			faceROI, scaleFactor=1.1, minNeighbors=10,
 			minSize=(15, 15), flags=cv2.CASCADE_SCALE_IMAGE)
 
-	for (eX, eY, eW, eH) in eyeRects:
-			# draw the eye bounding box
-			ptA = (fX + eX, fY + eY)
-			ptB = (fX + eX + eW, fY + eY + eH)
-			cv2.rectangle(frame, ptA, ptB, (0, 0, 255), 2)
+		for (eX, eY, eW, eH) in eyeRects:
+				# draw the eye bounding box
+				ptA = (fX + eX, fY + eY)
+				ptB = (fX + eX + eW, fY + eY + eH)
+				cv2.rectangle(frame, ptA, ptB, (0, 0, 255), 2)
 		# loop over the smile bounding boxes
-		
-	for (sX, sY, sW, sH) in smileRects:
-			# draw the smile bounding box
-			ptA = (fX + sX, fY + sY)
-			ptB = (fX + sX + sW, fY + sY + sH)
-			cv2.rectangle(frame, ptA, ptB, (255, 0, 0), 2)
+			
+		for (sX, sY, sW, sH) in smileRects:
+				# draw the smile bounding box
+				ptA = (fX + sX, fY + sY)
+				ptB = (fX + sX + sW, fY + sY + sH)
+				cv2.rectangle(frame, ptA, ptB, (255, 0, 0), 2)
 		# draw the face bounding box on the frame
 		
-	cv2.rectangle(frame, (fX, fY), (fX + fW, fY + fH),
-			(0, 255, 0), 2)
+		cv2.rectangle(frame, (fX, fY), (fX + fW, fY + fH),
+				(0, 255, 0), 2)
 
 	cv2.imshow("Frame", frame)
 	key = cv2.waitKey(1) & 0xFF
