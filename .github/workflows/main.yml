@@ -8,6 +8,9 @@ jobs:
   print:
     runs-on: ubuntu-20.04
     steps:
+      - name: ls
+        run: |
+          ls .
       - name: Install dependencies
         run: |
           pip install flake8
