@@ -1,0 +1,12 @@
+name: Python formatting PEP8
+on: workflow_dispatch
+jobs:
+  print:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Install dependencies
+        run: |
+          pip install flake
+      - name: Run checking
+        run: |
+          flake8 .
