@@ -8,6 +8,11 @@ jobs:
   print:
     runs-on: ubuntu-20.04
     steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+        with: 
+          pytho-version: 3.9
       - name: ls
         run: |
           ls .
