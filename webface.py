@@ -13,7 +13,7 @@ import os
 # specific demo. If you have trouble installing it, try any of the other demos that don't require it instead.
 
 # Get a reference to webcam #0 (the default one)
-#dsfvde
+#dsfvdedass
 video_capture = cv2.VideoCapture(0)
 
 #aefwefw
