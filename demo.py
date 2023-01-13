@@ -51,17 +51,18 @@ def crop_x2_replicate_300(img, coords):
 
 
 def process_from_video(detector, clahe, video, display, to_save=False):
+	if video == 'web':
+		video = 0
 	camera = cv2.VideoCapture(video)
 
-	result_videos_dir = 'result_videos/'
-	ret, frame = camera.read()
-	height, width, layers = frame.shape
-	size = (width,height)
-	#size = (500,650)
+	#result_videos_dir = 'result_videos/'
+	#ret, frame = camera.read()
+	#height, width, layers = frame.shape
+	#size = (width,height)
+	size = (500,650)
 
 	fourcc = cv2.VideoWriter_fourcc('m', 'p', '4', 'v')
-	#out = cv2.VideoWriter('vvvid.mp4', fourcc, 25, size)
-	out = cv2.VideoWriter('vvvid.mp4',fourcc, 20.0, size)
+	out = cv2.VideoWriter('video.mp4',fourcc, 20.0, size)
 
 	if (camera.isOpened()== False): 
   		print("Error opening video stream or file")
@@ -120,7 +121,7 @@ def process_from_1photo(image_path, detector, clahe):
 
 if __name__ == '__main__':
 	parser = argparse.ArgumentParser()
-	parser.add_argument('--video', required=True, default=0)
+	parser.add_argument('--video', required=True, default='web')
 	parser.add_argument('--detector', action="store_true", default=False)
 	parser.add_argument('--display', action="store_true", default=False)
 	parser.add_argument('--save_video', action="store_true", default=False)
@@ -137,12 +138,12 @@ if __name__ == '__main__':
 	source_dir = 'source_dir'
 	out_dir = 'out_dir'
 
-	if args.video == 'dir':
-		for im_p in os.listdir(source_dir):
-			print(im_p)
-			source_img, clahe_img = process_from_1photo(os.path.join(source_dir, im_p), det, clahe)
+	if os.path.isdir(args.video) and args.video != 'web':
+		for im_p in glob.glob(args.video+'/*'):
+			
+			source_img, clahe_img = process_from_1photo(im_p, det, clahe)
 			h_img = cv2.hconcat([source_img, clahe_img])
-			cv2.imwrite(os.path.join(out_dir, 'clahe_'+im_p), h_img)
+			cv2.imwrite(os.path.join(out_dir, 'clahe_'+im_p.split('/')[-1]), h_img)
 
 	else:
 		process_from_video(det, clahe, args.video, args.display, args.save_video)
