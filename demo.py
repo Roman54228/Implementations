@@ -2,7 +2,6 @@ import cv2
 import numpy as np
 from matplotlib import pyplot as plt
 import time
-import pickle
 import cv2
 import numpy as np
 import os
@@ -10,16 +9,10 @@ import argparse
 from torchvision.utils import save_image
 
 import os
-import torch
-import torch.nn as nn
-from common import get_points_from_file_name
-from face_attribute_onnx import FaceAttribute
 from time import time
 import argparse
 from pathlib import Path
 from collections import deque
-import timm
-import onnxruntime
 from detector_dgx import get_detector
 import glob
 
